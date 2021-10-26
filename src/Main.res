@@ -1,6 +1,16 @@
-let root = ReactDOM.querySelector("#root")
+// 1. Module functors
 
-let () = switch root {
-| Some(element) => ReactDOM.render(<React.StrictMode> <App /> </React.StrictMode>, element)
-| None => Js.Exn.raiseError("Root not found!")
+module type ConcatInterface = {
+  type t
+  let concat: (t, t) => t
 }
+
+module CreateConcat = (M: ConcatInterface) => {
+  type t = M.t
+  let concat = M.concat
+}
+
+module ConcatString = CreateConcat({
+  type t = string
+  let concat = (a, b) => `${a} ${b}`
+})
